@@ -71,7 +71,7 @@ for word in words:
         counters["related"] += 1
         for sense in ["vision", "sound", "skin", "taste", "smell"]:
             weighted[sense] += data[sense]
-        print(form, data)
+        print(form, dict([(k, round(v, 2)) for k, v in data.items()]))
         break
 
     if not found:
@@ -81,4 +81,6 @@ for sense in weighted:
     weighted[sense] /= counters["related"]
 
 print(counters)
-print(weighted)
+print(dict([(k, round(v, 3)) for k, v in weighted.items()]))
+
+input()
