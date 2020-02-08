@@ -66,6 +66,7 @@ for word in words:
         data = dictionary[form]
         if "vision" not in data:
             counters["unrelated"] += 1
+            print(form, "| unrelated")
             break
 
         counters["related"] += 1
@@ -76,6 +77,7 @@ for word in words:
 
     if not found:
         counters["unknown"] += 1
+        print(word, "| unknown")
 
 for sense in weighted:
     weighted[sense] /= counters["related"]
