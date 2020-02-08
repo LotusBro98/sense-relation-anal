@@ -43,9 +43,9 @@ with open("yes_relation_to_sense.txt", "rt", encoding='utf-8') as f:
         relation_strength = (["слабая", "средняя", "сильная"].index(elems[4]) + 1) / 3
         vision = convert_div(elems[5])
         sound = convert_div(elems[6])
-        skin = convert_div(elems[7])
+        smell = convert_div(elems[7])
         taste = convert_div(elems[8])
-        smell = convert_div(elems[9])
+        skin = convert_div(elems[9])
 
         sense_words[word] = {
             "relation": votes_yes / (votes_yes + votes_no),
