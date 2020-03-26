@@ -1,4 +1,5 @@
 import json
+import csv
 
 ### No relation to sense
 
@@ -62,3 +63,11 @@ sense_words.update(no_relation)
 
 with open("sense_words.json", "wt", encoding='utf-8') as f:
     json.dump(sense_words, f, indent=2, ensure_ascii=False)
+
+with open("sense_words.csv", "w", encoding="utf-8", newline='') as f:
+    writer = csv.writer(f, delimiter=',')
+    word = "Слово"
+    vec = list(list(sense_words.values())[0].keys())
+    writer.writerow([word] + vec)
+    for word, vec in sense_words.items():
+        writer.writerow([word] + list(vec.values()))
