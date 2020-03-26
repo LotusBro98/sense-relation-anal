@@ -3,6 +3,10 @@ import tkinter as tk
 from tkinter import filedialog
 import re
 
+import numpy as np
+
+import model.model as model
+
 RELATION_THRESHOLD = 0.5
 
 root = tk.Tk()
@@ -20,14 +24,12 @@ for delimiter in delimiters:
     for word in words:
         new_words += word.split(delimiter)
     words = new_words
+words = [word.lower() for word in words]
 
-with open("sense_words.json", "rt", encoding='utf-8') as f:
-    dictionary = json.load(f)
+senses = model.get_sense(words)
 
 counters = {
     "total": 0,
-    "unknown": 0,
-    "unrelated": 0,
     "related": 0
 }
 
@@ -39,48 +41,22 @@ weighted = {
     "smell": 0
 }
 
-endings = ["ой", "ий", "ый", "ого", "его", "ому", "ему", "им", "ым", "ом", "ем", "ая", "яя", "ей", "ую", "юю", "ое", "ее", "ие", "ые", "их", "ых", "им", "ым", "ие", "ые", "ими", "ыми", "их", "ых"]
-good_endings = ["ой", "ий", "ый"]
-
-for word in words:
-    word = word.lower()
-
-    unified = word + " "
-    for ending in endings:
-        unified = unified.replace(ending+" ", "* ")
-    forms = [word]
-    for ending in good_endings:
-        if "* " in unified:
-            forms.append(unified.replace("* ", ending+" ")[:-1])
-
-    # print(forms)
+for word, sense in zip(words, senses):
+    sense_dict = dict(zip(model.SENSE_VALUES_DESC, sense))
 
     counters["total"] += 1
-    found = False
-    for form in forms:
-        if form not in dictionary:
-            continue
 
-        found = True
+    if sense_dict["relation"] < 0.5:
+        continue
 
-        data = dictionary[form]
-        if "vision" not in data:
-            counters["unrelated"] += 1
-            print(form, "| unrelated")
-            break
+    counters["related"] += 1
+    for key in weighted:
+        weighted[key] += sense_dict[key]
 
-        counters["related"] += 1
-        for sense in ["vision", "sound", "skin", "taste", "smell"]:
-            weighted[sense] += data[sense]
-        print(form, dict([(k, round(v, 2)) for k, v in data.items()]))
-        break
+    print("{}: {}".format(word, dict([(k, round(v, 3)) for k, v in sense_dict.items()])))
 
-    if not found:
-        counters["unknown"] += 1
-        print(word, "| unknown")
-
-for sense in weighted:
-    weighted[sense] /= counters["related"]
+for key in weighted:
+    weighted[key] /= counters["related"]
 
 print(counters)
 print(dict([(k, round(v, 3)) for k, v in weighted.items()]))
