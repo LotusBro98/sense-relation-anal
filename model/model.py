@@ -7,7 +7,7 @@ import os
 import numpy
 import tensorflow as tf
 
-# http://vectors.nlpl.eu/repository/20/180.zip
+MODEL_URL = "http://vectors.nlpl.eu/repository/20/180.zip"
 emb_path = os.path.join(os.path.dirname(__file__), "model.bin")
 ru_emb = KeyedVectors.load_word2vec_format(emb_path, binary=True)
 
@@ -87,6 +87,8 @@ try:
     model = tf.keras.models.load_model(model_path)
 except Exception as e:
     print("No pretrained model found")
+    print("Please download from {}".format(MODEL_URL))
+    print("Adn put model.bin to model/ folder")
 
 def get_sense(words):
     emb = [get_emb(word) for word in words]

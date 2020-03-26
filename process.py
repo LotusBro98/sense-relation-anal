@@ -7,7 +7,7 @@ import numpy as np
 
 import model.model as model
 
-RELATION_THRESHOLD = 0.5
+RELATION_THRESHOLD = 0.4
 
 root = tk.Tk()
 root.withdraw()
@@ -46,7 +46,7 @@ for word, sense in zip(words, senses):
 
     counters["total"] += 1
 
-    if sense_dict["relation"] < 0.5:
+    if sense_dict["relation"] < RELATION_THRESHOLD:
         continue
 
     counters["related"] += 1
